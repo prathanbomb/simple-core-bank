@@ -8,6 +8,7 @@
 ## Getting started
 
 1. Serve HTTP API
+
 ```sh
 make run
 ```

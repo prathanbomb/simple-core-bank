@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/oatsaysai/simple-core-bank/src/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -48,4 +49,23 @@ func initConfig() {
 		fmt.Printf("unable to read config: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+func getLogger() (logger.Logger, error) {
+	logLevel := viper.GetString("Log.Level")
+	logLevel = logger.NormalizeLogLevel(logLevel)
+
+	logColor := viper.GetBool("Log.Color")
+	logJSON := viper.GetBool("Log.JSON")
+
+	logger, err := logger.NewLogger(&logger.Configuration{
+		EnableConsole:     true,
+		ConsoleLevel:      logLevel,
+		ConsoleJSONFormat: logJSON,
+		Color:             logColor,
+	}, logger.InstanceZapLogger)
+	if err != nil {
+		return nil, err
+	}
+	return logger, nil
 }

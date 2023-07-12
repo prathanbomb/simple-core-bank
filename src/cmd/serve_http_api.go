@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/oatsaysai/simple-core-bank/src/app"
 	"github.com/oatsaysai/simple-core-bank/src/http_api"
 	"github.com/spf13/cobra"
 )
@@ -18,10 +18,18 @@ var serveBackOfficeAPICmd = &cobra.Command{
 	Short: "Start HTTP API server",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		fiberApp := fiber.New()
-		fiberApp.Use(cors.New())
+		logger, err := getLogger()
+		if err != nil {
+			return err
+		}
 
-		httpAPI, err := http_api.New(fiberApp)
+		app, err := app.New(logger)
+		if err != nil {
+			return err
+		}
+
+		fiberApp := fiber.New()
+		httpAPI, err := http_api.New(fiberApp, app)
 		if err != nil {
 			return err
 		}
