@@ -1,0 +1,8 @@
+Log:
+  Level: debug
+  Color: true
+  JSON: false
+
+API:
+  HTTP:
+    Port: 8080
