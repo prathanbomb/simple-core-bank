@@ -12,6 +12,7 @@ type DBAccountInterface interface {
 
 func (pgdb *PostgresqlDB) InsertAccount(accountNo, accountName string, balance decimal.Decimal) error {
 	logger := pgdb.logger
+
 	_, err := pgdb.DB.Exec(context.Background(),
 		`
 		INSERT INTO accounts(
@@ -26,7 +27,7 @@ func (pgdb *PostgresqlDB) InsertAccount(accountNo, accountName string, balance d
 		balance,
 	)
 	if err != nil {
-		logger.Errorf("%v", err)
+		logger.Errorf("%+v", err)
 		return err
 	}
 

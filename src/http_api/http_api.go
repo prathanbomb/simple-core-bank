@@ -32,6 +32,7 @@ func New(fiberApp *fiber.App, app *app.App) (httpAPI *HttpAPI, err error) {
 	api := fiberApp.Group("/api")
 	routes.DefaultRouter(api)
 	routes.AccountRouter(api)
+	routes.TransferRouter(api)
 
 	return httpAPI, nil
 }

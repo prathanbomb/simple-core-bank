@@ -1,26 +1,16 @@
 package app
 
 import (
-	"fmt"
-	"math/rand"
-	"time"
-
 	"github.com/oatsaysai/simple-core-bank/src/custom_error"
 	log "github.com/oatsaysai/simple-core-bank/src/logger"
 	"github.com/oatsaysai/simple-core-bank/src/model"
 	"github.com/shopspring/decimal"
 )
 
-const ACCOUNT_NO_PREFIX = "007"
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
-func (ctx *Context) CreateAccount(params model.CreateAccountParams) (*model.CreateAccountResponse, error) {
+func (ctx *Context) TransferIn(params model.TransferInParams) (*model.TransferInResponse, error) {
 	logger := ctx.getLogger()
 	logger = logger.WithFields(log.Fields{
-		"func": "CreateAccount",
+		"func": "TransferIn",
 	})
 	logger.Info("Begin")
 	logger.Debugf("params: %v", params)
@@ -31,14 +21,9 @@ func (ctx *Context) CreateAccount(params model.CreateAccountParams) (*model.Crea
 		return nil, err
 	}
 
-	// Random account_no
-	accountNo := fmt.Sprintf("%s%07d", ACCOUNT_NO_PREFIX, rand.Intn(1000000))
-
-	// TODO: Check duplicate account_no
-	err := ctx.DB.InsertAccount(
-		accountNo,
-		params.AccountName,
-		decimal.NewFromInt(0),
+	txID, err := ctx.DB.TransferIn(
+		params.ToAccountNo,
+		decimal.NewFromFloat(params.Amount),
 	)
 	if err != nil {
 		return nil, &custom_error.InternalError{
@@ -47,8 +32,9 @@ func (ctx *Context) CreateAccount(params model.CreateAccountParams) (*model.Crea
 		}
 	}
 
-	return &model.CreateAccountResponse{
-		AccountNo:   accountNo,
-		AccountName: params.AccountName,
+	return &model.TransferInResponse{
+		TransactionID: *txID,
+		ToAccountNo:   params.ToAccountNo,
+		Amount:        params.Amount,
 	}, nil
 }

@@ -14,6 +14,7 @@ var createTransactionTableMigration = &Migration{
 				id BIGSERIAL PRIMARY KEY NOT NULL,
 				from_account_no VARCHAR(10), -- Must be null if tx is transfer-in
 				to_account_no VARCHAR(10),   -- Must be null if tx is transfer-out
+				amount NUMERIC NOT NULL,
 				transaction_type VARCHAR(12) NOT NULL,
 				transaction_time TIMESTAMPTZ NOT NULL DEFAULT NOW()
 			);

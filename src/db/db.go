@@ -14,6 +14,7 @@ import (
 
 type DB interface {
 	DBAccountInterface
+	DBTransferInterface
 
 	Close() error
 }
