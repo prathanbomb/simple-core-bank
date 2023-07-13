@@ -70,3 +70,37 @@ func (ctx *Context) TransferOut(params model.TransferOutParams) (*model.Transfer
 		Amount:        params.Amount,
 	}, nil
 }
+
+func (ctx *Context) Transfer(params model.TransferParams) (*model.TransferResponse, error) {
+	logger := ctx.getLogger()
+	logger = logger.WithFields(log.Fields{
+		"func": "Transfer",
+	})
+	logger.Info("Begin")
+	logger.Debugf("params: %v", params)
+	defer logger.Info("End")
+
+	if err := ValidateInput(params); err != nil {
+		logger.Errorf("validateInput error : %s", err)
+		return nil, err
+	}
+
+	txID, err := ctx.DB.Transfer(
+		params.FromAccountNo,
+		params.ToAccountNo,
+		decimal.NewFromFloat(params.Amount),
+	)
+	if err != nil {
+		return nil, &custom_error.InternalError{
+			Code:    custom_error.DBError,
+			Message: err.Error(),
+		}
+	}
+
+	return &model.TransferResponse{
+		TransactionID: *txID,
+		FromAccountNo: params.FromAccountNo,
+		ToAccountNo:   params.ToAccountNo,
+		Amount:        params.Amount,
+	}, nil
+}

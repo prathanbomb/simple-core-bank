@@ -21,3 +21,16 @@ type TransferOutResponse struct {
 	FromAccountNo string  `json:"from_account_no"`
 	Amount        float64 `json:"amount"`
 }
+
+type TransferParams struct {
+	FromAccountNo string  `json:"from_account_no" validate:"required"`
+	ToAccountNo   string  `json:"to_account_no" validate:"required"`
+	Amount        float64 `json:"amount" validate:"required,gt=0"`
+}
+
+type TransferResponse struct {
+	TransactionID int64   `json:"transaction_id"`
+	FromAccountNo string  `json:"from_account_no"`
+	ToAccountNo   string  `json:"to_account_no"`
+	Amount        float64 `json:"amount"`
+}
