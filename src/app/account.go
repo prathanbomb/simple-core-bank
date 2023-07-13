@@ -32,7 +32,7 @@ func (ctx *Context) CreateAccount(params model.CreateAccountParams) (*model.Crea
 	}
 
 	// Random account_no
-	accountNo := fmt.Sprintf("%s%d", ACCOUNT_NO_PREFIX, rand.Intn(1000000))
+	accountNo := fmt.Sprintf("%s%07d", ACCOUNT_NO_PREFIX, rand.Intn(1000000))
 
 	// TODO: Check duplicate account_no
 	err := ctx.DB.InsertAccount(
