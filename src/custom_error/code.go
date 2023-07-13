@@ -7,4 +7,5 @@ const (
 	InvalidJSONString    uint64 = errorCodeBase + 2
 	InputValidationError uint64 = errorCodeBase + 3
 	Unauthorized         uint64 = errorCodeBase + 4
+	DBError              uint64 = errorCodeBase + 5
 )

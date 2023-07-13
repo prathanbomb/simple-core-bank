@@ -12,6 +12,7 @@ var createAccountTableMigration = &Migration{
 		const sql = `
 			CREATE TABLE accounts(
 				account_no VARCHAR(10) PRIMARY KEY NOT NULL,
+				account_name VARCHAR(255) NOT NULL,
 				balance NUMERIC NOT NULL CHECK(balance >= 0)
 			);
 		`

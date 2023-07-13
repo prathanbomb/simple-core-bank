@@ -13,6 +13,8 @@ import (
 )
 
 type DB interface {
+	DBAccountInterface
+
 	Close() error
 }
 

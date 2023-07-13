@@ -9,7 +9,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/oatsaysai/simple-core-bank/src/custom_error"
-	"github.com/oatsaysai/simple-core-bank/src/logger"
+	"github.com/oatsaysai/simple-core-bank/src/db"
+	log "github.com/oatsaysai/simple-core-bank/src/logger"
 )
 
 var (
@@ -48,10 +49,11 @@ func init() {
 
 type App struct {
 	Config *Config
-	Logger logger.Logger
+	Logger log.Logger
+	DB     db.DB
 }
 
-func New(logger logger.Logger) (app *App, err error) {
+func New(logger log.Logger) (app *App, err error) {
 	app = &App{
 		Logger: logger,
 	}
@@ -61,10 +63,25 @@ func New(logger logger.Logger) (app *App, err error) {
 		return nil, err
 	}
 
+	dbConfig, err := db.InitConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	app.DB, err = db.New(dbConfig, logger)
+	if err != nil {
+		return nil, err
+	}
+
 	return app, err
 }
 
 func (app *App) Close() error {
+	err := app.DB.Close()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
