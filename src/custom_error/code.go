@@ -9,4 +9,5 @@ const (
 	Unauthorized         uint64 = errorCodeBase + 4
 	DBError              uint64 = errorCodeBase + 5
 	AccountNoNotFound    uint64 = errorCodeBase + 6
+	BalanceNotEnough     uint64 = errorCodeBase + 7
 )
