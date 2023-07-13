@@ -2,7 +2,8 @@
 
 ## Prerequisites
 
-- make
+- Make
+- Docker 24 or later
 - Go 1.19 or later
 - PostgreSQL 14 or later
 
