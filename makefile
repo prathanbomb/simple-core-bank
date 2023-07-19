@@ -1,7 +1,4 @@
-run:
-	go build -o simple-core-bank src/main.go
-	./simple-core-bank migrate-db
-	./simple-core-bank serve-http-api
+run: build run-without-build
 
 start-db:
 	./tools/start_postgresql_docker.sh
@@ -10,3 +7,13 @@ start-db:
 
 stop-db:
 	./tools/stop_postgresql_docker.sh
+
+build-docker-image:
+	docker build -t simple-core-bank .
+
+build:
+	go build -o simple-core-bank src/main.go
+
+run-without-build:
+	./simple-core-bank migrate-db
+	./simple-core-bank serve-http-api

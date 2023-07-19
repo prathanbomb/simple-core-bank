@@ -13,6 +13,12 @@
 docker-compose up -d
 ```
 
+## How to rebuild image after edit
+
+```sh
+docker-compose build simple-core-bank
+```
+
 ## Getting started
 
 1. Start PostgreSQL docker

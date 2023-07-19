@@ -19,23 +19,6 @@ services:
       timeout: 5s
       retries: 5
 
-  simple-core-bank-migdate-db:
-    image: simple-core-bank
-    container_name: simple-core-bank-migdate-db
-    build: .
-    volumes:
-      - ./cfg/config.docker.yaml:/cfg/config.yaml:ro
-    depends_on:
-      postgres:
-        condition: service_healthy
-    entrypoint:
-      [
-        '/app',
-        'migrate-db'
-      ]
-    networks:
-      - simple-core-bank-network
-
   simple-core-bank:
     image: simple-core-bank
     container_name: simple-core-bank
@@ -50,8 +33,8 @@ services:
     restart: always
     entrypoint:
       [
-        '/app',
-        'serve-http-api'
+        'make',
+        'run-without-build'
       ]
     networks:
       - simple-core-bank-network

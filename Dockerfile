@@ -11,8 +11,14 @@ RUN go build \
 
 FROM alpine:3.18
 
+RUN apk add --no-cache \
+    bash \
+    make \
+    tzdata
+
 WORKDIR /
 
-COPY --from=builder /build/app /app
+COPY --from=builder /build/app /simple-core-bank
+COPY makefile .
 
-ENTRYPOINT [ "/app" ]
+ENTRYPOINT [ "/simple-core-bank" ]
