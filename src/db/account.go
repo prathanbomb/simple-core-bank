@@ -51,7 +51,6 @@ func (pgdb *PostgresqlDB) PreGenerateAccountNo(batchSize int) error {
 	for i := 0; i < batchSize; i++ {
 		rows = append(rows, []interface{}{
 			fmt.Sprintf("%010d", latestNumber+i+1),
-			false,
 		})
 	}
 
@@ -63,7 +62,7 @@ func (pgdb *PostgresqlDB) PreGenerateAccountNo(batchSize int) error {
 	_, err = pgdb.DB.CopyFrom(
 		context.Background(),
 		pgx.Identifier{"pregen_acc_no"},
-		[]string{"account_no", "is_used"},
+		[]string{"account_no"},
 		pgx.CopyFromRows(rows),
 	)
 	if err != nil {
@@ -88,16 +87,11 @@ func (pgdb *PostgresqlDB) GetAccountNoAndInsertAccount(accountName string, balan
 
 	err = tx.QueryRow(
 		context.Background(),
-		"SELECT account_no FROM pregen_acc_no WHERE is_used = FALSE LIMIT 1 FOR UPDATE",
+		"SELECT account_no FROM pregen_acc_no WHERE id = (SELECT nextval('available_acc_no_id'))",
 	).Scan(&accountNo)
 	if err != nil {
 		logger.Errorf("Failed to scan account number: %+v", err)
 		return "", fmt.Errorf("failed to scan account number: %w", err)
-	}
-
-	if _, err = tx.Exec(context.Background(), "UPDATE pregen_acc_no SET is_used = TRUE WHERE account_no = $1", accountNo); err != nil {
-		logger.Errorf("Failed to execute update on account number: %+v", err)
-		return "", fmt.Errorf("failed to execute update on account number: %w", err)
 	}
 
 	_, err = tx.Exec(context.Background(),
