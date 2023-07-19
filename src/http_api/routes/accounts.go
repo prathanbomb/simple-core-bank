@@ -12,6 +12,39 @@ import (
 func AccountRouter(fiberApp fiber.Router) {
 	fiberApp.Post("/create-account", CreateAccount())
 	fiberApp.Post("/get-account", GetAccount())
+	fiberApp.Post("/pre-generate-account-no", PreGenerateAccountNo())
+}
+
+func PreGenerateAccountNo() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		var params model.PreGenerateAccountNoParams
+
+		err := c.BodyParser(&params)
+		if err != nil {
+			c.Status(http.StatusBadRequest)
+			return c.JSON(&custom_error.UserError{
+				Code:           custom_error.InvalidJSONString,
+				Message:        "Invalid JSON string",
+				HTTPStatusCode: http.StatusBadRequest,
+			})
+		}
+
+		appCtx := c.Locals(APP_CTX_KEY).(app.Context)
+		_, err = appCtx.PreGenerateAccountNumbers(params)
+		if err != nil {
+			c.Status(http.StatusInternalServerError)
+			return c.JSON(&custom_error.InternalError{
+				Code:    custom_error.UnknownError,
+				Message: err.Error(),
+			})
+		}
+
+		return c.JSON(&Response{
+			Code:    0,
+			Message: "Successfully pre-generated account numbers",
+			Data:    nil,
+		})
+	}
 }
 
 func GetAccount() fiber.Handler {

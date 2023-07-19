@@ -18,3 +18,12 @@ type GetAccountResponse struct {
 	AccountName string  `json:"account_name"`
 	Balance     float64 `json:"balance"`
 }
+
+type PreGenerateAccountNoParams struct {
+	BatchSize int `json:"batch_size"`
+}
+
+type PreGenerateAccountNoResponse struct {
+	Success   bool `json:"success"`
+	BatchSize int  `json:"batch_size"`
+}
