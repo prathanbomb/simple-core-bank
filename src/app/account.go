@@ -1,13 +1,13 @@
 package app
 
 import (
-	"github.com/shopspring/decimal"
 	"math/rand"
 	"time"
 
 	"github.com/oatsaysai/simple-core-bank/src/custom_error"
 	log "github.com/oatsaysai/simple-core-bank/src/logger"
 	"github.com/oatsaysai/simple-core-bank/src/model"
+	"github.com/shopspring/decimal"
 )
 
 func init() {
@@ -22,6 +22,11 @@ func (ctx *Context) PreGenerateAccountNumbers(params model.PreGenerateAccountNoP
 	logger.Info("Begin")
 	logger.Debugf("params: %v", params)
 	defer logger.Info("End")
+
+	if err := ValidateInput(params); err != nil {
+		logger.Errorf("validateInput error : %s", err)
+		return nil, err
+	}
 
 	// Pre-generate account numbers
 	err := ctx.DB.PreGenerateAccountNo(params.BatchSize)

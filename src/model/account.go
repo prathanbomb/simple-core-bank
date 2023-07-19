@@ -20,7 +20,7 @@ type GetAccountResponse struct {
 }
 
 type PreGenerateAccountNoParams struct {
-	BatchSize int `json:"batch_size"`
+	BatchSize int `json:"batch_size" validate:"required,gt=0"`
 }
 
 type PreGenerateAccountNoResponse struct {

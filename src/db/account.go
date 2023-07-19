@@ -4,9 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/shopspring/decimal"
+	"math/rand"
 	"strconv"
-	"strings"
+	"time"
+
+	"github.com/jackc/pgx/v5"
+	"github.com/shopspring/decimal"
 )
 
 type DBAccountInterface interface {
@@ -33,7 +36,7 @@ func (pgdb *PostgresqlDB) PreGenerateAccountNo(batchSize int) error {
 
 	if latestAccountNo.Valid {
 		// Parse the numeric part of the latest account number
-		latestNumber, err = strconv.Atoi(latestAccountNo.String[3:])
+		latestNumber, err = strconv.Atoi(latestAccountNo.String)
 		if err != nil {
 			logger.Errorf("Failed to parse latest account number: %+v", err)
 			return fmt.Errorf("failed to parse latest account number: %w", err)
@@ -43,18 +46,29 @@ func (pgdb *PostgresqlDB) PreGenerateAccountNo(batchSize int) error {
 		logger.Info("First time generating account numbers")
 	}
 
-	// Generate new account numbers and build insert values string
-	values := make([]string, batchSize)
-	for i := range values {
-		accountNo := fmt.Sprintf("%s%07d", "007", latestNumber+i+1)
-		values[i] = fmt.Sprintf("('%s', false)", accountNo)
+	// Generate new account numbers
+	rows := [][]interface{}{}
+	for i := 0; i < batchSize; i++ {
+		rows = append(rows, []interface{}{
+			fmt.Sprintf("%010d", latestNumber+i+1),
+			false,
+		})
 	}
 
+	// Shuffle account numbers
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(rows), func(i, j int) { rows[i], rows[j] = rows[j], rows[i] })
+
 	// Execute batch insert operation
-	_, err = pgdb.DB.Exec(context.Background(), `INSERT INTO pregen_acc_no(account_no, is_used) VALUES `+strings.Join(values, ","))
+	_, err = pgdb.DB.CopyFrom(
+		context.Background(),
+		pgx.Identifier{"pregen_acc_no"},
+		[]string{"account_no", "is_used"},
+		pgx.CopyFromRows(rows),
+	)
 	if err != nil {
-		logger.Errorf("Failed to execute batch insert operation: %+v", err)
-		return fmt.Errorf("failed to execute batch insert operation: %w", err)
+		logger.Errorf("Failed to execute CopyFrom operation: %+v", err)
+		return fmt.Errorf("failed to execute CopyFrom operation: %w", err)
 	}
 
 	logger.Infof("Successfully pre-generated %d account numbers", batchSize)
