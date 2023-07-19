@@ -20,3 +20,11 @@ make start-db
 ```sh
 make run
 ```
+
+## Load test
+
+1. Load test create account API
+
+```sh
+./tools/load_test_create_account.sh 
+```
