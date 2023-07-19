@@ -27,6 +27,7 @@ func New(fiberApp *fiber.App, app *app.App) (httpAPI *HttpAPI, err error) {
 
 	fiberApp.Use(cors.New())
 	fiberApp.Use(httpAPI.createAppContextMiddleware(app))
+	fiberApp.Use(httpAPI.setContentTypeJSON())
 	fiberApp.Use(httpAPI.loggingMiddleware())
 
 	api := fiberApp.Group("/api")
@@ -35,6 +36,13 @@ func New(fiberApp *fiber.App, app *app.App) (httpAPI *HttpAPI, err error) {
 	routes.TransferRouter(api)
 
 	return httpAPI, nil
+}
+
+func (api *HttpAPI) setContentTypeJSON() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		c.Request().Header.Set("Content-Type", "application/json")
+		return c.Next()
+	}
 }
 
 func (api *HttpAPI) loggingMiddleware() fiber.Handler {
