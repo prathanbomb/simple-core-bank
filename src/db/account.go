@@ -84,29 +84,18 @@ func (pgdb *PostgresqlDB) GetAccountNoAndInsertAccount(accountName string, balan
 		logger.Errorf("Failed to begin transaction: %+v", err)
 		return "", fmt.Errorf("failed to begin transaction: %w", err)
 	}
+	defer tx.Rollback(context.Background())
 
-	defer func() {
-		if p := recover(); p != nil {
-			if err := tx.Rollback(context.Background()); err != nil {
-				logger.Errorf("Failed to rollback transaction after panic: %+v", err)
-			}
-			logger.Errorf("Transaction rolled back due to a panic: %+v", p)
-		}
-	}()
-
-	row := tx.QueryRow(context.Background(), "SELECT account_no FROM pregen_acc_no WHERE is_used = FALSE LIMIT 1 FOR UPDATE")
-	if err = row.Scan(&accountNo); err != nil {
-		if rbErr := tx.Rollback(context.Background()); rbErr != nil {
-			logger.Errorf("Failed to rollback transaction after failing to scan account number: %+v", rbErr)
-		}
+	err = tx.QueryRow(
+		context.Background(),
+		"SELECT account_no FROM pregen_acc_no WHERE is_used = FALSE LIMIT 1 FOR UPDATE",
+	).Scan(&accountNo)
+	if err != nil {
 		logger.Errorf("Failed to scan account number: %+v", err)
 		return "", fmt.Errorf("failed to scan account number: %w", err)
 	}
 
 	if _, err = tx.Exec(context.Background(), "UPDATE pregen_acc_no SET is_used = TRUE WHERE account_no = $1", accountNo); err != nil {
-		if rbErr := tx.Rollback(context.Background()); rbErr != nil {
-			logger.Errorf("Failed to rollback transaction after failing to execute update: %+v", rbErr)
-		}
 		logger.Errorf("Failed to execute update on account number: %+v", err)
 		return "", fmt.Errorf("failed to execute update on account number: %w", err)
 	}
@@ -125,10 +114,6 @@ func (pgdb *PostgresqlDB) GetAccountNoAndInsertAccount(accountName string, balan
 		balance,
 	)
 	if err != nil {
-		logger.Errorf("%+v", err)
-		if rbErr := tx.Rollback(context.Background()); rbErr != nil {
-			logger.Errorf("Failed to rollback transaction after failing to execute insert: %+v", rbErr)
-		}
 		logger.Errorf("Failed to insert account: %+v", err)
 		return "", fmt.Errorf("failed to insert account: %w", err)
 	}
