@@ -36,6 +36,12 @@ func New(fiberApp *fiber.App, app *app.App) (httpAPI *HttpAPI, err error) {
 	routes.AccountRouter(api)
 	routes.TransferRouter(api)
 
+	// Handle invalid path
+	fiberApp.Use(func(c *fiber.Ctx) error {
+		c.Status(fiber.StatusNotFound)
+		return nil
+	})
+
 	return httpAPI, nil
 }
 
