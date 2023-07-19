@@ -14,4 +14,4 @@ PostgreSQL:
   DBPassword: 'postgres'
   DBName: 'simple_core_bank'
   DBSchemaName: 'public'
-  MaxOpenConns: 1
+  MaxOpenConns: 30
