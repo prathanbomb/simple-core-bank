@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/oatsaysai/simple-core-bank/src/custom_error"
 	log "github.com/oatsaysai/simple-core-bank/src/logger"
 	"github.com/oatsaysai/simple-core-bank/src/model"
 	"github.com/shopspring/decimal"
@@ -29,10 +28,7 @@ func (ctx *Context) TransferIn(params model.TransferInParams) (*model.TransferIn
 		decimal.NewFromFloat(params.Amount),
 	)
 	if err != nil {
-		return nil, &custom_error.UserError{
-			Code:    custom_error.DBError,
-			Message: err.Error(),
-		}
+		return nil, err
 	}
 
 	return &model.TransferInResponse{
@@ -61,10 +57,7 @@ func (ctx *Context) TransferOut(params model.TransferOutParams) (*model.Transfer
 		decimal.NewFromFloat(params.Amount),
 	)
 	if err != nil {
-		return nil, &custom_error.UserError{
-			Code:    custom_error.DBError,
-			Message: err.Error(),
-		}
+		return nil, err
 	}
 
 	return &model.TransferOutResponse{
@@ -94,10 +87,7 @@ func (ctx *Context) Transfer(params model.TransferParams) (*model.TransferRespon
 		decimal.NewFromFloat(params.Amount),
 	)
 	if err != nil {
-		return nil, &custom_error.UserError{
-			Code:    custom_error.DBError,
-			Message: err.Error(),
-		}
+		return nil, err
 	}
 
 	return &model.TransferResponse{
@@ -130,10 +120,7 @@ func (ctx *Context) TransferInForLoadTest(params model.TransferForLoadTestParams
 		decimal.NewFromFloat(params.Amount),
 	)
 	if err != nil {
-		return nil, &custom_error.UserError{
-			Code:    custom_error.DBError,
-			Message: err.Error(),
-		}
+		return nil, err
 	}
 
 	return &model.TransferInResponse{
@@ -165,10 +152,7 @@ func (ctx *Context) TransferOutForLoadTest(params model.TransferForLoadTestParam
 		decimal.NewFromFloat(params.Amount),
 	)
 	if err != nil {
-		return nil, &custom_error.UserError{
-			Code:    custom_error.DBError,
-			Message: err.Error(),
-		}
+		return nil, err
 	}
 
 	return &model.TransferOutResponse{
@@ -202,10 +186,7 @@ func (ctx *Context) TransferForLoadTest(params model.TransferForLoadTestParams) 
 		decimal.NewFromFloat(params.Amount),
 	)
 	if err != nil {
-		return nil, &custom_error.UserError{
-			Code:    custom_error.DBError,
-			Message: err.Error(),
-		}
+		return nil, err
 	}
 
 	return &model.TransferResponse{

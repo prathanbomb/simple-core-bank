@@ -22,6 +22,13 @@ func ReturnCustomError(c *fiber.Ctx, customErr error) error {
 	case *custom_error.UserError:
 		c.Status(http.StatusBadRequest)
 		return c.JSON(&custom_error.UserError{
+			Code:           customErr.Code,
+			Message:        customErr.Error(),
+			HTTPStatusCode: http.StatusBadRequest,
+		})
+	case *custom_error.ValidationError:
+		c.Status(http.StatusBadRequest)
+		return c.JSON(&custom_error.ValidationError{
 			Code:    customErr.Code,
 			Message: customErr.Error(),
 		})
