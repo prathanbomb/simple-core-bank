@@ -34,3 +34,8 @@ type TransferResponse struct {
 	ToAccountNo   string  `json:"to_account_no"`
 	Amount        float64 `json:"amount"`
 }
+
+type TransferForLoadTestParams struct {
+	MaxAccountNo int     `json:"max_account_no" validate:"required"`
+	Amount       float64 `json:"amount" validate:"required,gt=0"`
+}

@@ -1,7 +1,6 @@
 package custom_error
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -55,14 +54,4 @@ func (e ListErr) Error() string {
 		l = append(l, v.Error())
 	}
 	return strings.Join(l, " ,")
-}
-
-type DuplicateEditError struct {
-	Code           uint64 `json:"response_code"`
-	Message        string `json:"response_message"`
-	HTTPStatusCode int    `json:"-"`
-}
-
-func (e *DuplicateEditError) Error() string {
-	return fmt.Sprintf("Error Code: %d, Message: %s", e.Code, e.Message)
 }

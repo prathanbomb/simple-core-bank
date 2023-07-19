@@ -1,6 +1,7 @@
 package http_api
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -63,6 +64,9 @@ func (api *HttpAPI) loggingMiddleware() fiber.Handler {
 			"duration":    duration.String(),
 			"status_code": statusCode,
 		})
+		if statusCode != http.StatusOK && statusCode != http.StatusCreated && statusCode != http.StatusAccepted {
+			logger.Errorf("%s", c.Response().Body())
+		}
 		logger.Infof("%s %s", c.Method(), c.OriginalURL())
 
 		return nil

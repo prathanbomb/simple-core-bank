@@ -32,11 +32,7 @@ func PreGenerateAccountNo() fiber.Handler {
 		appCtx := c.Locals(APP_CTX_KEY).(app.Context)
 		_, err = appCtx.PreGenerateAccountNumbers(params)
 		if err != nil {
-			c.Status(http.StatusInternalServerError)
-			return c.JSON(&custom_error.InternalError{
-				Code:    custom_error.UnknownError,
-				Message: err.Error(),
-			})
+			return ReturnCustomError(c, err)
 		}
 
 		return c.JSON(&Response{
@@ -64,11 +60,7 @@ func GetAccount() fiber.Handler {
 		appCtx := c.Locals(APP_CTX_KEY).(app.Context)
 		result, err := appCtx.GetAccount(&params)
 		if err != nil {
-			c.Status(http.StatusInternalServerError)
-			return c.JSON(&custom_error.InternalError{
-				Code:    custom_error.UnknownError,
-				Message: err.Error(),
-			})
+			return ReturnCustomError(c, err)
 		}
 
 		return c.JSON(&Response{
@@ -96,11 +88,7 @@ func CreateAccount() fiber.Handler {
 		appCtx := c.Locals(APP_CTX_KEY).(app.Context)
 		result, err := appCtx.CreateAccount(params)
 		if err != nil {
-			c.Status(http.StatusInternalServerError)
-			return c.JSON(&custom_error.InternalError{
-				Code:    custom_error.UnknownError,
-				Message: err.Error(),
-			})
+			return ReturnCustomError(c, err)
 		}
 
 		return c.JSON(&Response{

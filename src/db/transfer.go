@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5"
 
 	"github.com/oatsaysai/simple-core-bank/src/custom_error"
 	"github.com/pkg/errors"
@@ -177,12 +176,7 @@ func (pgdb *PostgresqlDB) Transfer(fromAccountNo, toAccountNo string, amount dec
 	if err != nil {
 		return nil, handleError(err, "Unable to make a transaction")
 	}
-
-	defer func(tx pgx.Tx, ctx context.Context) {
-		if err := tx.Rollback(ctx); err != nil {
-			logger.Errorf("Rollback failed: %+v", err)
-		}
-	}(tx, ctx)
+	defer tx.Rollback(context.Background())
 
 	if _, err = tx.Exec(ctx, `SET TRANSACTION ISOLATION LEVEL READ COMMITTED`); err != nil {
 		return nil, handleError(err, "Failed to set transaction isolation level")
