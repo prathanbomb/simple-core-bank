@@ -8,8 +8,8 @@ API:
     Port: 8080
 
 PostgreSQL:
-  DBHost: 'localhost'
-  DBPort: '5433'
+  DBHost: 'postgres'
+  DBPort: '5432'
   DBUsername: 'postgres'
   DBPassword: 'postgres'
   DBName: 'simple_core_bank'

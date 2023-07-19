@@ -7,6 +7,12 @@
 - Go 1.19 or later
 - PostgreSQL 14 or later
 
+## How to run with docker-compose
+
+```sh
+docker-compose up -d
+```
+
 ## Getting started
 
 1. Start PostgreSQL docker
@@ -23,7 +29,9 @@ make run
 
 ## Load test
 
-1. Load test create account API
+1. Please set log level to "error" before load test
+
+2. Load test create account API
 
 ```sh
 ./tools/load_test_create_account.sh 

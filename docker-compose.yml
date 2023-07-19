@@ -1,0 +1,61 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgres
+    user: postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-simple_core_bank}
+    ports:
+      - '5433:5432'
+    networks:
+      -  simple-core-bank-network
+    restart: always
+    healthcheck:
+      test: pg_isready
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  simple-core-bank-migdate-db:
+    image: simple-core-bank
+    container_name: simple-core-bank-migdate-db
+    build: .
+    volumes:
+      - ./cfg/config.docker.yaml:/cfg/config.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint:
+      [
+        '/app',
+        'migrate-db'
+      ]
+    networks:
+      - simple-core-bank-network
+
+  simple-core-bank:
+    image: simple-core-bank
+    container_name: simple-core-bank
+    build: .
+    volumes:
+      - ./cfg/config.docker.yaml:/cfg/config.yaml:ro
+    ports:
+      - 8080:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    entrypoint:
+      [
+        '/app',
+        'serve-http-api'
+      ]
+    networks:
+      - simple-core-bank-network
+
+networks:
+  simple-core-bank-network:
+    driver: bridge
