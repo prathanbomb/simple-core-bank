@@ -1,7 +1,13 @@
 FROM golang:1.19-alpine3.18 as builder
 
+RUN apk add --no-cache \
+    git 
+
 WORKDIR /app
 COPY . /app
+
+ADD go.mod go.sum /app/
+RUN go mod download
 
 WORKDIR /app/src
 
@@ -12,9 +18,7 @@ RUN go build \
 FROM alpine:3.18
 
 RUN apk add --no-cache \
-    bash \
-    make \
-    tzdata
+    make
 
 WORKDIR /
 

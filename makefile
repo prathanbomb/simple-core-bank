@@ -10,6 +10,7 @@ stop-db:
 
 build-docker-image:
 	docker build -t simple-core-bank .
+	./tools/remove_all_none_image.sh
 
 build:
 	go build -o simple-core-bank src/main.go
