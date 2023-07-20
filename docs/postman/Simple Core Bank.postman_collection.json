@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "4dd582d9-30fb-4059-b59c-ef6596b71de9",
+		"name": "Simple Core Bank",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4177993"
+	},
+	"item": [
+		{
+			"name": "/api/pre-generate-account-no",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"batch_size\": 1000000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/pre-generate-account-no",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"pre-generate-account-no"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/create-account",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"account_name\": \"พี่บอม เทพซ่า\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/create-account",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"create-account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/get-account",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"account_no\": \"0070882624\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/get-account",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"get-account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/transfer-in",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"to_account_no\": \"0070882624\",\r\n    \"amount\": 100\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/transfer-in",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"transfer-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/transfer-out",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"from_account_no\": \"0070129545\",\r\n    \"amount\": 2000001.1111\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/transfer-out",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"transfer-out"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/transfer",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"from_account_no\": \"0070882624\",\r\n    \"to_account_no\": \"0070083499\",\r\n    \"amount\": 100000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/transfer",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"transfer"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
