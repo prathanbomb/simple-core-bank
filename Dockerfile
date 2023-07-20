@@ -4,13 +4,13 @@ RUN apk add --no-cache \
     git 
 
 WORKDIR /app
-COPY . /app
 
 ADD go.mod go.sum /app/
 RUN go mod download
 
-WORKDIR /app/src
+COPY . /app
 
+WORKDIR /app/src
 RUN go build \
     -ldflags "-X app/version.GitCommit=`git rev-parse --short=8 HEAD`" \
     -o /build/app
