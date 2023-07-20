@@ -13,10 +13,10 @@
 docker-compose up -d
 ```
 
-## How to rebuild image after edit
+## How to rebuild image after edit code
 
 ```sh
-docker-compose build simple-core-bank
+docker-compose up -d --build
 ```
 
 ## Getting started
