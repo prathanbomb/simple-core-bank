@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	pgxdecimal "github.com/jackc/pgx-shopspring-decimal"
@@ -15,6 +16,7 @@ import (
 type DB interface {
 	DBAccountInterface
 	DBTransferInterface
+	DBTransactionInterface
 
 	Close() error
 }
@@ -48,6 +50,11 @@ func New(config *Config, logger log.Logger) (pgdb *PostgresqlDB, err error) {
 	connectConf.ConnConfig.Tracer = &tracelog.TraceLog{
 		Logger:   NewDatabaseLogger(&pgdb.logger),
 		LogLevel: tracelog.LogLevelTrace,
+	}
+
+	// Set timezone to PGX runtime
+	if s := os.Getenv("TZ"); s != "" {
+		connectConf.ConnConfig.RuntimeParams["timezone"] = s
 	}
 
 	// Register Decimal Data Type to PGX Pool
